@@ -8,7 +8,7 @@ appNames.forEach((appName) => {
   const menu = document.createElement('a');
   menu.classList.add('nav-menu');
   menu.textContent = appName.toUpperCase();
-  menu.addEventListener('click', () => {
+  menu.addEventListener('click', (e) => {
     cover.classList.remove('active');
     const appEls = document.querySelectorAll('.app');
     appEls.forEach((appEl) => {
