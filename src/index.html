@@ -85,21 +85,39 @@
                         <span id='ty-author-name'></span>
                     </div>
                 </div>
-                <textarea  id="ty-textarea" ></textarea>
+                <textarea  id="ty-textarea"  ></textarea>
             
                 <div id="ty-result-container" >
                     <div id="ty-result">
                         <h3>your typing speed is ...</h3>
                         <h2 id='ty-LPM'></h2><span>[ lettsrs per a minute]</span>
-                        <div id="back-to-start">Back to Start Page</div>
+                        <div id="ty-back-to-start">Back to Start Page</div>
                 </div>
                 <div id="ty-quote-review"></div>
         </section>
 
-        <!-- slide-puzzle app -->
-        <section id="slide-puzzle" class='app'>
+       <!-- slide-puzzle app -->
+       <section id="slide-puzzle" class='app'>
+        <div class="sp-cover">
             <h1>Slide Puzzle</h1>
-        </section>
+            <ul class="sp-menu">
+                <p>select the level</p>
+                <li data-level="easy">easy</li>
+                <li data-level="medium">medium</li>
+                <li data-level="difficult">difficult</li>
+            </ul>
+        </div>
+        <div class="sp-container">
+            <img alt="" id="sp-original-image">
+            <div class="sp-info-panel">
+                <img src="./images/slide_puzzle/picture.png" alt="" id="sp-show-original-btn">
+                <div class="sp-moves">Moves: <span class="sp-counter"></span></div>
+                <div class="sp-back-to-menu">Back to Menu</div>
+            </div>
+            <div class="sp-screen">
+            </div>
+        </div>
+    </section>
 
         <!-- memory-card app -->
         <section id="memory-card" class='app'>
