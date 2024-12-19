@@ -1,4 +1,5 @@
 import * as Todo from './modules/todo.js';
+import * as Typing from './modules/typing.js';
 
 const nav = document.querySelector('#nav');
 const cover = document.querySelector('#cover');
@@ -20,7 +21,7 @@ appNames.forEach((appName) => {
     navMenus.forEach((navMenu) => {
       navMenu.classList.remove('active');
     });
-    e.target.classlist.add('active');
+    e.target.classList.add('active');
   });
 
   nav.appendChild(menu);
