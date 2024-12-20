@@ -63,18 +63,3 @@ function showResult() {
     resultContainer.classList.add('show');
   }, 1000);
 }
-
-async function fetchAndRenderQuotes() {
-  const RANDOM_QUOTE_API_URl = 'https://api.quotable.io/quotes/random';
-  const response = await fetch(RANDOM_QUOTE_API_URl);
-  const data = await response.json();
-  console.log(response);
-  console.log(data);
-
-  quotes = { quote: data.content, author: data.author };
-  console.log(quotes);
-
-  quotes.quote.split('').forEach((letter) => {});
-}
-
-fetchAndRenderQuotes();

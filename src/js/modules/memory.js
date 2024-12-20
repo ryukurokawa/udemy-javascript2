@@ -82,7 +82,84 @@ function createDeck() {
     const frontImage = cardDiv.querySelector('.mc-front > img');
     frontImage.setAttribute('src', facesPath[face]);
     deck.appendChild(cardDiv);
+    cardDiv.addEventListener('click', flip);
   });
 }
 
-createDeck();
+function flip() {
+  if (!playingNow) {
+    playingNow = true;
+    intervalId = setInterval(() => {
+      time++;
+      timer.textContent = time;
+    }, 1000);
+  }
+  if (openedCards.length === 0) {
+    this.classList.add('rotate');
+    openedCards.push(this);
+  } else if (openedCards.length === 1) {
+    if (this === openedCards[0]) {
+      return;
+    }
+    this.classList.add('rotate');
+    openedCards.push(this);
+    matchedOrNot(openedCards[0], openedCards[1]);
+  }
+}
+
+function matchedOrNot(card1, card2) {
+  const cardsToCheck = [card1, card2];
+  const cardOneFace = card1.querySelector('.mc-front > img').src;
+  const cardTwoFace = card2.querySelector('.mc-front > img').src;
+  if (cardOneFace === cardTwoFace) {
+    matchedCount++;
+    matchedCounter.textContent = matchedCount;
+    cardsToCheck.forEach((card) => {
+      card.classList.add('matched');
+      card.removeEventListener('click', flip);
+    });
+    if (matchedCount === 8) {
+      clearInterval(intervalId);
+      finishTime = time;
+      finishTimeEl.textContent = finishTime;
+      setTimeout(() => {
+        congrats.classList.add('show');
+      }, 2500);
+    }
+    openedCards = [];
+  } else {
+    failedCount++;
+    failedCounter.textContent = failedCount;
+    setTimeout(() => {
+      cardsToCheck.forEach((card) => {
+        card.classList.remove('rotate');
+        openedCards = [];
+      });
+    }, 800);
+  }
+}
+
+resetBtn.addEventListener('click', () => {
+  start();
+});
+
+function start() {
+  matchedCount = 0;
+  matchedCounter.textContent = matchedCount;
+  failedCount = 0;
+  failedCounter.textContent = failedCount;
+  time = 0;
+  timer.textContent = time;
+  openedCards = [];
+  deck.innerHTML = '';
+  playingNow = false;
+  clearInterval(intervalId);
+  createDeck();
+}
+
+retry.addEventListener('click', () => {
+  congrats.classList.remove('show');
+  start();
+});
+
+start();
