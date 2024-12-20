@@ -1,3 +1,7 @@
+import UP from '../../images/todo_button/up.png';
+import OK from '../../images/todo_button/ok.png';
+import CANCEL from '../../images/todo_button/cancel.png';
+
 const addForm = document.querySelector('.td-add-form');
 const addInput = document.querySelector('.td-add-input');
 const todosUl = document.querySelector('.todos');
@@ -42,12 +46,12 @@ function createTodoElement(todo) {
   const btn = document.createElement('img');
   btn.classList.add('td-btn');
   const upBtn = btn.cloneNode(false);
-  upBtn.setAttribute('src', './images/todo_button/up.png');
+  upBtn.setAttribute('src', UP);
 
   if (!todo.isDone) {
     upBtn.classList.add('edit-btn');
     btn.classList.add('isDone-btn');
-    btn.setAttribute('src', './images/todo_button/ok.png');
+    btn.setAttribute('src', OK);
     btnContainer.appendChild(btn);
     btnContainer.appendChild(upBtn);
     todoItem.appendChild(btnContainer);
@@ -55,7 +59,7 @@ function createTodoElement(todo) {
   } else {
     upBtn.classList.add('undo-btn');
     btn.classList.add('delete-btn');
-    btn.setAttribute('src', './images/todo_button/cancel.png');
+    btn.setAttribute('src', CANCEL);
     btnContainer.appendChild(btn);
     btnContainer.appendChild(upBtn);
     todoItem.appendChild(btnContainer);
