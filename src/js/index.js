@@ -2,6 +2,7 @@ import * as Todo from './modules/todo.js';
 import * as Typing from './modules/typing.js';
 import * as Slide from './modules/slide.js';
 import * as Memory from './modules/memory.js';
+import * as Life from './modules/life.js';
 
 const nav = document.querySelector('#nav');
 const cover = document.querySelector('#cover');
