@@ -14,9 +14,9 @@ let timelimit = 30;
 let remainingTime;
 let isActive = false;
 let isPlaying = false;
-let intervalid = null;
+let intervalId = null;
 let quotes;
-
+let typedCount = 0;
 timeSelectEl.addEventListener('change', () => {
   timelimit = parseInt(timeSelectEl.value, 10); // 数字に変換
 });
@@ -30,16 +30,19 @@ window.addEventListener('keypress', (e) => {
   }
 });
 
-function start() {
+async function start() {
   startPage.classList.remove('show');
   typingGame.classList.add('show');
   titleTime.textContent = timelimit; // 修正
   remainingTime = timelimit;
   timer.textContent = remainingTime;
-  textarea.focus();
-  textarea.disabled = false;
 
-  intervalid = setInterval(() => {
+  await fetchAndRenderQuotes();
+
+  textarea.disabled = false;
+  textarea.focus();
+
+  intervalId = setInterval(() => {
     remainingTime -= 1;
     timer.textContent = remainingTime;
     if (remainingTime <= 0) {
@@ -57,7 +60,7 @@ backToStart.addEventListener('click', () => {
 
 function showResult() {
   textarea.disabled = true;
-  clearInterval(intervalid);
+  clearInterval(intervalId);
   setTimeout(() => {
     resultContainer.classList.add('show');
   }, 1000);
@@ -84,12 +87,28 @@ async function fetchAndRenderQuotes() {
 
   quotes.quote.split('').forEach((letter) => {
     const span = document.createElement('span');
-    span.textContent = letter === ' ' ? '\u00A0' : letter;
+    span.textContent = letter;
     quoteContainer.appendChild(span);
   });
 
-  const authorContainer = document.querySelector('#ty-author-name');
-  authorContainer.textContent = quotes.author;
+  author.textContent = quotes.author;
+  console.log(quote);
+  console.log(author);
 }
 
-fetchAndRenderQuotes();
+textarea.addEventListener('input', () => {
+  let inputArray = textarea.value.split('');
+  let spans = quote.querySelectorAll('span');
+  spans.forEach((span) => {
+    span.className = '';
+  });
+
+  inputArray.forEach((letter, index) => {
+    if (letter === spans[index].textContent) {
+      spans[index].classList.add('correct');
+    } else {
+      spans[index].classList.add('wrong');
+      if (spans[index].textContent === ' ') spans[index].classList.add('bar');
+    }
+  });
+});
