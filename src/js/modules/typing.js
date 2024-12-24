@@ -18,23 +18,22 @@ let intervalid = null;
 let quotes;
 
 timeSelectEl.addEventListener('change', () => {
-  timelimit = timeSelectEl.value;
+  timelimit = parseInt(timeSelectEl.value, 10); // 数字に変換
 });
+
 window.addEventListener('keypress', (e) => {
   isActive = typing.classList.contains('active');
-
   if (e.key === 'Enter' && isActive && !isPlaying) {
     start();
     isActive = false;
     isPlaying = true;
   }
-  return;
 });
 
 function start() {
   startPage.classList.remove('show');
   typingGame.classList.add('show');
-  titleTime.textConten = timelimit;
+  titleTime.textContent = timelimit; // 修正
   remainingTime = timelimit;
   timer.textContent = remainingTime;
   textarea.focus();
@@ -63,3 +62,34 @@ function showResult() {
     resultContainer.classList.add('show');
   }, 1000);
 }
+
+async function fetchAndRenderQuotes() {
+  const proxyUrl = 'https://api.allorigins.win/get?url=';
+  const targetUrl = 'https://zenquotes.io/api/random';
+
+  const response = await fetch(proxyUrl + targetUrl);
+  const data = await response.json();
+  console.log('データ', data);
+  console.log('データの内容', data.contents);
+
+  const parsedData = JSON.parse(data.contents);
+  const quoteText = parsedData[0].q;
+  const authorName = parsedData[0].a;
+
+  quotes = { quote: quoteText, author: authorName };
+  console.log(quotes);
+
+  const quoteContainer = document.querySelector('#ty-quote');
+  quoteContainer.innerHTML = '';
+
+  quotes.quote.split('').forEach((letter) => {
+    const span = document.createElement('span');
+    span.textContent = letter === ' ' ? '\u00A0' : letter;
+    quoteContainer.appendChild(span);
+  });
+
+  const authorContainer = document.querySelector('#ty-author-name');
+  authorContainer.textContent = quotes.author;
+}
+
+fetchAndRenderQuotes();
