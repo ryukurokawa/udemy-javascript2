@@ -9,6 +9,8 @@ const resultContainer = document.querySelector('#ty-result-container');
 const textarea = document.querySelector('#ty-textarea');
 const quote = document.querySelector('#ty-quote');
 const author = document.querySelector('#ty-author-name');
+const LPM = document.querySelector('#ty-LPM');
+const quoteReview = document.querySelector('#ty-quote-review');
 
 let timelimit = 30;
 let remainingTime;
@@ -17,6 +19,8 @@ let isPlaying = false;
 let intervalId = null;
 let quotes;
 let typedCount = 0;
+let LPMCount;
+
 timeSelectEl.addEventListener('change', () => {
   timelimit = parseInt(timeSelectEl.value, 10); // 数字に変換
 });
@@ -33,14 +37,13 @@ window.addEventListener('keypress', (e) => {
 async function start() {
   startPage.classList.remove('show');
   typingGame.classList.add('show');
-  titleTime.textContent = timelimit; // 修正
+  titleTime.textContent = timelimit;
   remainingTime = timelimit;
   timer.textContent = remainingTime;
-
   await fetchAndRenderQuotes();
-
   textarea.disabled = false;
   textarea.focus();
+  typedCount = 0;
 
   intervalId = setInterval(() => {
     remainingTime -= 1;
@@ -61,26 +64,38 @@ backToStart.addEventListener('click', () => {
 function showResult() {
   textarea.disabled = true;
   clearInterval(intervalId);
+  LPMCount =
+    remainingTime === 0
+      ? Math.floor((typedCount * 60) / timelimit)
+      : Math.floor((typedCount * 60) / (timelimit - remainingTime));
+  quoteReview.innerHTML = `${quotes.quote} <br>--- ${quotes.author}`;
+  let count = 0;
   setTimeout(() => {
     resultContainer.classList.add('show');
+    const countup = setInterval(() => {
+      LPM.textContent = count;
+      count += 1;
+      if (count >= LPMCount) {
+        clearInterval(countup);
+      }
+    }, 20);
   }, 1000);
 }
 
 async function fetchAndRenderQuotes() {
+  quote.innerHTML = '';
+  textarea.value = '';
   const proxyUrl = 'https://api.allorigins.win/get?url=';
   const targetUrl = 'https://zenquotes.io/api/random';
 
   const response = await fetch(proxyUrl + targetUrl);
   const data = await response.json();
-  console.log('データ', data);
-  console.log('データの内容', data.contents);
 
   const parsedData = JSON.parse(data.contents);
   const quoteText = parsedData[0].q;
   const authorName = parsedData[0].a;
 
   quotes = { quote: quoteText, author: authorName };
-  console.log(quotes);
 
   const quoteContainer = document.querySelector('#ty-quote');
   quoteContainer.innerHTML = '';
@@ -92,8 +107,6 @@ async function fetchAndRenderQuotes() {
   });
 
   author.textContent = quotes.author;
-  console.log(quote);
-  console.log(author);
 }
 
 textarea.addEventListener('input', () => {
@@ -102,13 +115,24 @@ textarea.addEventListener('input', () => {
   spans.forEach((span) => {
     span.className = '';
   });
-
+  typedCount = 0;
   inputArray.forEach((letter, index) => {
     if (letter === spans[index].textContent) {
       spans[index].classList.add('correct');
+      if (spans[index].textContent !== ' ') {
+        typedCount += 1;
+      }
     } else {
       spans[index].classList.add('wrong');
-      if (spans[index].textContent === ' ') spans[index].classList.add('bar');
+      if (spans[index].textContent === ' ') {
+        spans[index].classList.add('bar');
+      }
     }
   });
+  if (
+    spans.length === inputArray.length &&
+    [...spans].every((span) => span.classList.contains('correct'))
+  ) {
+    showResult();
+  }
 });
